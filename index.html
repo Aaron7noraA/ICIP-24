@@ -58,10 +58,7 @@ Learned hierarchical B-frame coding aims to leverage bi-directional reference fr
     </p>
     <br>
     <p>
-Illustration of our proposed method. The overall coding framework, where $x_t$ is the current coding B-frame and $\hat{x}_{t-k}, \hat{x}_{t+k}$ are the two previously reconstructed reference frames. $S$ represents the downsampling factor, which takes on 1, 2, 4, or 8. $Up$ denotes the process of upsampling to the initial resolution.
-    </p>
-    <p>
-Encoding a B-frame $x_t$ begins by selecting one of the downsampling factors $S$ from \{1, 2, 4, 8\}. The motion estimation network (MENet) is then used to estimate two low-resolution optical flow maps $m^{(S)}_{t\to{t}-k}, m^{(S)}_{t\to{t}+k} \in \mathbb{R}^{2 \times \frac{W}{S} \times \frac{H}{S}}$ for $x^{(S)}_t$ with respect to $\hat{x}^{(S)}_{t-k}$ and $\hat{x}^{(S)}_{t+k}$. These flow maps are then collectively compressed by the conditional motion codec ($M^{enc}, M^{dec}$). In other words, the low-resolution flow maps are encoded into the bitstream. For motion compensation, the reconstructed flow maps $\hat{m}^{(S)}_{t\to{t}-k}, \hat{m}^{(S)}_{t\to{t}+k} \in \mathbb{R}^{2 \times \frac{W}{S} \times \frac{H}{S}}$ are upsampled to the original resolution before being fed into the frame synthesis network (FSNet). The FSNet performs multi-scale motion compensation in both the feature and pixel domains, producing the temporal predictor $mc^{(S)}_t \in \mathbb{R}^{3 \times W \times H}$, which serves as the conditioning signal for the inter-frame codec ($G^{enc}, G^{dec}$) to encode $x_t$.
+      The figure illustrates our proposed method. Encoding a B-frame $x_t$ begins by selecting one of the downsampling factors $S$ from \{1, 2, 4, 8\}. The motion estimation network (MENet) is then used to estimate two low-resolution optical flow maps $m^{(S)}_{t\to{t}-k}, m^{(S)}_{t\to{t}+k} \in \mathbb{R}^{2 \times \frac{W}{S} \times \frac{H}{S}}$ for $x^{(S)}_t$ with respect to $\hat{x}^{(S)}_{t-k}$ and $\hat{x}^{(S)}_{t+k}$. These flow maps are then collectively compressed by the conditional motion codec ($M^{enc}, M^{dec}$). In other words, the low-resolution flow maps are encoded into the bitstream. For motion compensation, the reconstructed flow maps $\hat{m}^{(S)}_{t\to{t}-k}, \hat{m}^{(S)}_{t\to{t}+k} \in \mathbb{R}^{2 \times \frac{W}{S} \times \frac{H}{S}}$ are upsampled to the original resolution before being fed into the frame synthesis network (FSNet). The FSNet performs multi-scale motion compensation in both the feature and pixel domains, producing the temporal predictor $mc^{(S)}_t \in \mathbb{R}^{3 \times W \times H}$, which serves as the conditioning signal for the inter-frame codec ($G^{enc}, G^{dec}$) to encode $x_t$.
     </p>
     </div>
       
@@ -90,8 +87,12 @@ Encoding a B-frame $x_t$ begins by selecting one of the downsampling factors $S$
       <div id="exp1">
         <div class="col-md-6 vcenter">
           <p style="text-align:center;">
-            <a href="assets/RD/RD_HEVC-B.png" data-lightbox="RD Curve"><img
+            <a href="assets/RD/RD_HEVC-B.png" data-lightbox="RD Curve HEVC-B"><img
                 src="assets/RD/RD_HEVC-B.png" width="1080"></a>
+            <a href="assets/RD/RD_UVG.png" data-lightbox="RD Curve UVG"><img
+              src="assets/RD/RD_UVG.png" width="1080"></a>
+            <a href="assets/RD/RD_MCL-JCV.png" data-lightbox="RD Curve MCL"><img
+              src="assets/RD/RD_MCL-JCV.png" width="1080"></a>
           </p>
         </div>
       </div>

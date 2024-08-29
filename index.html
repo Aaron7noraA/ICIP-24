@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TransTIC: Transferring Transformer-based Image Compression from Human Perception to Machine Perception</title>
+  <title>OMRA: Online Motion Resolution Adaptation to Remedy Domain Shift in Learned Hierarchical B-frame Coding</title>
   <script type="text/javascript" src="assets/latexit.js"></script>
   <script type="text/javascript">
     LatexIT.add('p', true);
@@ -24,41 +24,18 @@
 
   <div id="header" class="container-fluid">
     <div class="row">
-      <h1>TransTIC: Transferring Transformer-based Image Compression<br />  from Human Perception to Machine Perception</h1>
+      <h1>OMRA: Online Motion Resolution Adaptation to Remedy Domain Shift in Learned Hierarchical B-frame Coding</h1>
       <div class="authors">
-        Yi-Hsin Chen, Ying-Chieh Weng, Chia-Hao Kao, Cheng Chien, Wei-Chen Chiu, Wen-Hsiao Peng
+        Zong-Lin Gao, Sang NguyenQuang, Wen-Hsiao Peng, Xiem Hoang Van
       </div>
       <div class="conference">
-        ICCV 2023
+        ICIP 2024
         <span style="display:inline-block; width: 5px;"></span>
-        <a href="https://arxiv.org/abs/2306.05085" target="_blank"><img src="assets/icon/arxiv.jpg" height="35"></a>
+        <a href="https://arxiv.org/abs/2402.12816" target="_blank"><img src="assets/icon/arxiv.jpg" height="35"></a>
         <!-- <span style="display:inline-block; width: 1px;"></span> -->
-        <a href="https://github.com/NYCU-MAPL/TransTIC" target="_blank"><img src="assets/icon/GitHub-Mark.png" height="45"></a>
+        <a href="https://github.com/NYCU-MAPL" target="_blank"><img src="assets/icon/GitHub-Mark.png" height="45"></a>
       </div>
     </div>
-
-    <!-- <div class="row">
-      <div class="col-sm-3">
-      </div>
-      <div class="col-sm-3">
-          <a href="https://github.com/NYCU-MAPL/TransTIC" target="_blank"><p style="text-align: center;">
-          <img src="assets/icon/github_icon_small.png" height="48">
-          <br/>
-          Code (Github)
-      </p></a></div>
-      <div class="col-sm-3">
-          <a href="https://arxiv.org/abs/2306.05085" target="_blank"><p style="text-align: center;">
-          <img src="assets/icon/pdf_icon.png" height="48">
-          <br/>
-          Paper (arXiv)
-      </p></a></div>
-      <div class="col-sm-3">
-      </div>
-  </div>
-  <a href="" target="_blank">
-      <div class="thumbs">
-      </div>
-  </a> -->
 
     <p style="text-align:center;">
       <a href="https://en.nycu.edu.tw/" target="_blank"><img src="assets/icon/210204-NYCU (1).png" height="90"></a>
@@ -69,44 +46,22 @@
   <div class="container" id="abstractdiv">
     <h2>Abstract</h2>
     <p>
-    This work aims for transferring a Transformer-based image compression codec from human perception to machine
-    perception without fine-tuning the codec. We propose a
-    transferable Transformer-based image compression framework, termed TransTIC. Inspired by visual prompt tuning,
-    TransTIC adopts an instance-specific prompt generator to
-    inject instance-specific prompts to the encoder and task-specific prompts to the decoder. Extensive experiments
-    show that our proposed method is capable of transferring
-    the base codec to various machine tasks and outperforms
-    the competing methods significantly. To our best knowledge, this work is the first attempt to utilize prompting on
-    the low-level image compression task.
+Learned hierarchical B-frame coding aims to leverage bi-directional reference frames for better coding efficiency. However, the domain shift between training and test scenarios due to dataset limitations poses a challenge. This issue arises from training the codec with small groups of pictures (GOP) but testing it on large GOPs. Specifically, the motion estimation network, when trained on small GOPs, is unable to handle large motion at test time, incurring a negative impact on compression performance. To mitigate the domain shift, we present an online motion resolution adaptation (OMRA) method. It adapts the spatial resolution of video frames on a per-frame basis to suit the capability of the motion estimation network in a pre-trained B-frame codec. Our OMRA is an online, inference technique. It need not re-train the codec and is readily applicable to existing B-frame codecs that adopt hierarchical bi-directional prediction. Experimental results show that OMRA significantly enhances the compression performance of two state-of-the-art learned B-frame codecs on commonly used datasets. 
     </p>
   </div>
 
   <div class="container" id="banner">
     <h2>Method</h2>
     <p style="text-align:center;">
-      <a href="assets/architecture.png" data-lightbox="arch"><img src="assets/architecture.png" data-lightbox="arch"
+      <a href="assets/OverView.png" data-lightbox="arch"><img src="assets/OverView.png" data-lightbox="arch"
           width="85%"></a>
     </p>
     <br>
     <p>
-      The figure illustrates our transferable Transformer-based image compression framework, termed $TransTIC$. It is built
-      upon $TIC$, except that the context prior model is replaced
-      with a simpler Gaussian prior for entropy coding. As
-      shown, the main autoencoder $g_a$, $g_s$ and the hyperprior autoencoder $h_a$, $h_s$ include Swin-Transformer blocks (STB)
-      as the basic building blocks. These STB are interwoven
-      with convolutional layers to adapt feature resolution in the
-      data pipeline. In this work, the main and hyperprior autoencoders are pre-trained for human perception (i.e. the image reconstruction task) and their network weights are fixed
-      during the transferring process.
+Illustration of our proposed method. The overall coding framework, where $x_t$ is the current coding B-frame and $\hat{x}_{t-k}, \hat{x}_{t+k}$ are the two previously reconstructed reference frames. $S$ represents the downsampling factor, which takes on 1, 2, 4, or 8. $Up$ denotes the process of upsampling to the initial resolution.
     </p>
     <p>
-      To transfer $g_a$, $g_s$ such that the decoded image $\hat{x}$ is suitable for machine perception, we inject (1) instance-specific
-      prompts produced by gp into the first two STBs in $g_a$ and (2) task-specific prompts into all the STBs in $g_s$. 
-      We note that the prompt generator $g_p$ and the
-      task-specific prompts input to the decoder are learnable and
-      updated according to the machine perception task. That is,
-      the network weights of $g_p$ are task-specific. However, the
-      prompts produced by $g_p$ are instance-specific because they
-      are dependent on the input image.
+Encoding a B-frame $x_t$ begins by selecting one of the downsampling factors $S$ from \{1, 2, 4, 8\}. The motion estimation network (MENet) is then used to estimate two low-resolution optical flow maps $m^{(S)}_{t\to{t}-k}, m^{(S)}_{t\to{t}+k} \in \mathbb{R}^{2 \times \frac{W}{S} \times \frac{H}{S}}$ for $x^{(S)}_t$ with respect to $\hat{x}^{(S)}_{t-k}$ and $\hat{x}^{(S)}_{t+k}$. These flow maps are then collectively compressed by the conditional motion codec ($M^{enc}, M^{dec}$). In other words, the low-resolution flow maps are encoded into the bitstream. For motion compensation, the reconstructed flow maps $\hat{m}^{(S)}_{t\to{t}-k}, \hat{m}^{(S)}_{t\to{t}+k} \in \mathbb{R}^{2 \times \frac{W}{S} \times \frac{H}{S}}$ are upsampled to the original resolution before being fed into the frame synthesis network (FSNet). The FSNet performs multi-scale motion compensation in both the feature and pixel domains, producing the temporal predictor $mc^{(S)}_t \in \mathbb{R}^{3 \times W \times H}$, which serves as the conditioning signal for the inter-frame codec ($G^{enc}, G^{dec}$) to encode $x_t$.
     </p>
     </div>
       
@@ -115,24 +70,13 @@
       <a href="assets/paper.pdf"
         download="TransTIC: Transferring Transformer-based Image Compression from Human Perception to Machine Perception.pdf">
         <div class="thumbs">
-      <img src="assets/thumbnails/paper-01.jpg" width="19%">
-      <img src="assets/thumbnails/paper-02.jpg" width="19%">
-      <img src="assets/thumbnails/paper-03.jpg" width="19%">
-      <img src="assets/thumbnails/paper-04.jpg" width="19%">
-      <img src="assets/thumbnails/paper-05.jpg" width="19%">
-      <img src="assets/thumbnails/paper-06.jpg" width="19%">
-      <img src="assets/thumbnails/paper-07.jpg" width="19%">
-      <img src="assets/thumbnails/paper-08.jpg" width="19%">
-      <img src="assets/thumbnails/paper-09.jpg" width="19%">
-      <img src="assets/thumbnails/paper-10.jpg" width="19%">
-      <img src="assets/thumbnails/paper-11.jpg" width="19%">
-      <img src="assets/thumbnails/paper-12.jpg" width="19%">
-      <img src="assets/thumbnails/paper-13.jpg" width="19%">
-      <img src="assets/thumbnails/paper-14.jpg" width="19%">
-      <img src="assets/thumbnails/paper-15.jpg" width="19%">
-      <img src="assets/thumbnails/paper-16.jpg" width="19%">
-      <img src="assets/thumbnails/paper-17.jpg" width="19%">
-      <img src="assets/thumbnails/paper-18.jpg" width="19%">
+      <img src="assets/ICIP2024/ICIP2024-1.png" width="19%">
+      <img src="assets/ICIP2024/ICIP2024-2.png" width="19%">
+      <img src="assets/ICIP2024/ICIP2024-3.png" width="19%">
+      <img src="assets/ICIP2024/ICIP2024-4.png" width="19%">
+      <img src="assets/ICIP2024/ICIP2024-5.png" width="19%">
+      <img src="assets/ICIP2024/ICIP2024-6.png" width="19%">
+      <img src="assets/ICIP2024/ICIP2024-7.png" width="19%">
     </div>
     </a>
 
@@ -146,8 +90,8 @@
       <div id="exp1">
         <div class="col-md-6 vcenter">
           <p style="text-align:center;">
-            <a href="assets/results/rd.png" data-lightbox="Exp1"><img
-                src="assets/results/rd.png" width="1080"></a>
+            <a href="assets/RD/RD_HEVC-B.png" data-lightbox="RD Curve"><img
+                src="assets/RD/RD_HEVC-B.png" width="1080"></a>
           </p>
         </div>
       </div>

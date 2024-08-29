@@ -40,13 +40,24 @@
     <p style="text-align:center;">
       <a href="https://en.nycu.edu.tw/" target="_blank"><img src="assets/icon/210204-NYCU (1).png" height="90"></a>
        
-      <a href="http://mapl.nctu.edu.tw/" target="_blank"><img src="assets/icon/mapl_logo.png" height="120"></a>
+      <a href="https://mapl.cs.nycu.edu.tw/content/" target="_blank"><img src="assets/icon/mapl_logo.png" height="120"></a>
     </p>
   </div>
   <div class="container" id="abstractdiv">
     <h2>Abstract</h2>
     <p>
 Learned hierarchical B-frame coding aims to leverage bi-directional reference frames for better coding efficiency. However, the domain shift between training and test scenarios due to dataset limitations poses a challenge. This issue arises from training the codec with small groups of pictures (GOP) but testing it on large GOPs. Specifically, the motion estimation network, when trained on small GOPs, is unable to handle large motion at test time, incurring a negative impact on compression performance. To mitigate the domain shift, we present an online motion resolution adaptation (OMRA) method. It adapts the spatial resolution of video frames on a per-frame basis to suit the capability of the motion estimation network in a pre-trained B-frame codec. Our OMRA is an online, inference technique. It need not re-train the codec and is readily applicable to existing B-frame codecs that adopt hierarchical bi-directional prediction. Experimental results show that OMRA significantly enhances the compression performance of two state-of-the-art learned B-frame codecs on commonly used datasets. 
+    </p>
+    <h3><b>Domain Shift Issue</b></h3>
+    <p style="text-align:center;">
+      <a href="assets/DoaminShift.png" data-lightbox="arch"><img src="assets/DoaminShift.png" data-lightbox="arch"
+          width="75%"></a> 
+    </p>
+    <p>
+      The figure illustrates of the hierarchical B-frame prediction structures: (a) a 5-frame GOP for training and (b) a 32-frame GOP for test.  
+    </p>
+    <p>
+      Domain shift issue arises from training learned B-frame codecs on short video sequences with a small group of pictures (GOP) but putting them to use on a large GOP. Most learned codecs, B-frame or P-frame, are trained on Vimeo-90k~\cite{vimeo}, where each training video is only 7-frame long.  The motion estimation network trained and optimized for small GOPs has difficulties in handling large motion often present in large GOPs.
     </p>
   </div>
 
@@ -58,7 +69,7 @@ Learned hierarchical B-frame coding aims to leverage bi-directional reference fr
     </p>
     <br>
     <p>
-      The figure illustrates our proposed method. Encoding a B-frame $x_t$ begins by selecting one of the downsampling factors $S$ from \{1, 2, 4, 8\}. The motion estimation network (MENet) is then used to estimate two low-resolution optical flow maps $m^{(S)}_{t\to{t}-k}, m^{(S)}_{t\to{t}+k} \in \mathbb{R}^{2 \times \frac{W}{S} \times \frac{H}{S}}$ for $x^{(S)}_t$ with respect to $\hat{x}^{(S)}_{t-k}$ and $\hat{x}^{(S)}_{t+k}$. These flow maps are then collectively compressed by the conditional motion codec ($M^{enc}, M^{dec}$). In other words, the low-resolution flow maps are encoded into the bitstream. For motion compensation, the reconstructed flow maps $\hat{m}^{(S)}_{t\to{t}-k}, \hat{m}^{(S)}_{t\to{t}+k} \in \mathbb{R}^{2 \times \frac{W}{S} \times \frac{H}{S}}$ are upsampled to the original resolution before being fed into the frame synthesis network (FSNet). The FSNet performs multi-scale motion compensation in both the feature and pixel domains, producing the temporal predictor $mc^{(S)}_t \in \mathbb{R}^{3 \times W \times H}$, which serves as the conditioning signal for the inter-frame codec ($G^{enc}, G^{dec}$) to encode $x_t$.
+      The figure illustrates our proposed method. Encoding a B-frame $x_t$ begins by selecting one of the downsampling factors $S$ from {1, 2, 4, 8}. The motion estimation network (MENet) is then used to estimate two low-resolution optical flow maps $m^{(S)}_{t\to{t}-k}, m^{(S)}_{t\to{t}+k} \in \mathbb{R}^{2 \times \frac{W}{S} \times \frac{H}{S}}$ for $x^{(S)}_t$ with respect to $\hat{x}^{(S)}_{t-k}$ and $\hat{x}^{(S)}_{t+k}$. These flow maps are then collectively compressed by the conditional motion codec $(M^{enc}, M^{dec})$. In other words, the low-resolution flow maps are encoded into the bitstream. For motion compensation, the reconstructed flow maps $\hat{m}^{(S)}_{t\to{t}-k}, \hat{m}^{(S)}_{t\to{t}+k} \in \mathbb{R}^{2 \times \frac{W}{S} \times \frac{H}{S}}$ are upsampled to the original resolution before being fed into the frame synthesis network (FSNet). The FSNet performs multi-scale motion compensation in both the feature and pixel domains, producing the temporal predictor $mc^{(S)}_t \in \mathbb{R}^{3 \times W \times H}$, which serves as the conditioning signal for the inter-frame codec $(G^{enc}, G^{dec})$ to encode $x_t$.
     </p>
     </div>
       
@@ -80,13 +91,13 @@ Learned hierarchical B-frame coding aims to leverage bi-directional reference fr
     <div class="container" id="exp_results">
       <h2>Rate-distortion Results</h2>
       <p>
-        aaaaa The rate-accuracy plots for the competing methods. The methods are evaluated on three machine tasks: classification, object detection, and instance segmentation. For classification, we use ImageNet-val
+         The rate-accuracy plots for the competing methods. The methods are evaluated on three machine tasks: classification, object detection, and instance segmentation. For classification, we use ImageNet-val
          as the test set and a pre-trained ResNet50 as the downstream recognition network. For object detection and instance segmentation, we test the competing methods on COCO2017-val using a pre-trained Faster R-CNN and Mask R-CNN as the downstream recognition networks, respectively.
       </p>
 
       <div id="exp1">
-        <div class="col-md-6 vcenter">
-          <p style="text-align:center;">
+        <div>
+          <p>
             <a href="assets/RD/RD_HEVC-B.png" data-lightbox="RD Curve HEVC-B"><img
                 src="assets/RD/RD_HEVC-B.png" width="360"></a>
             <a href="assets/RD/RD_UVG.png" data-lightbox="RD Curve UVG"><img
@@ -96,99 +107,36 @@ Learned hierarchical B-frame coding aims to leverage bi-directional reference fr
           </p>
         </div>
       </div>
-      <div class="col-md-12">
-        <hr>
-      </div>
-      <p>
-        We also compare our TransTIC with the methods recently submitted to the call-for-proposals (CFP) 
-        competition of the MPEG VCM standard based on their test protocol. 
-        The results of these competing methods are from
-        the CFP test report (m61010). As shown in Fig. B1, our
-        TransTIC performs comparably to the top performers in
-        terms of rate-accuracy performance. However, our base
-        codec has the additional constraint that it is optimized for
-        human perception, while the top performers (e.g. p12, p6,
-        p7) optimize the entire codec end-to-end for machine tasks.
-        This shows the potential of our TransTIC.
-      </p>
-
-      <div id="exp2">
-        <div class="row">
-          <!-- <p style="text-align:center;">
-            <a href="assets/results/rd2SOTA.png" data-lightbox="Exp2"><img
-                src="assets/results/rd2SOTA.png" width="1080"></a>
-          </p> -->
-          <p style="text-align:center;">
-            <a href="assets/results/rd2SOTA_detection.png" data-lightbox="Exp2"><img
-                src="assets/results/rd2SOTA_detection.png" width="480"></a>
-          <!-- </p> -->
-          <!-- <p style="text-align:center;"> -->
-            <a href="assets/results/rd2SOTA_segmentation.png" data-lightbox="Exp2"><img
-                src="assets/results/rd2SOTA_segmentation.png" width="480"></a>
-          </p>
-        </div>
-      </div>
     </div>
+<!-- 
+    <div class="container" id="Visualization">
+      <h2>Perframe Profiles</h2>
+          <p style="text-align:center;">
+            <a href="assets/PerFrame.png" data-lightbox="PerFrame"><img
+                src="assets/PerFrame.png" width="700"></a>
+          </p>
+    </div> -->
 
     <div class="container" id="Visualization">
-      <h2>Qualitative Comparison</h2>
+
+      <h2>Subjective Quality Comparison</h2>
       <p>
-        Decoded images and the bit allocation maps produced by the competing methods. As shown, $TIC$, the codec optimized for human perception,
-         tends to allocate more bits to complex regions, even if those regions are less relevant (e.g. background) to the downstream recognition tasks. 
-         In contrast, the other methods, which target machine perception, attempt to shift coding bits from the background regions to the foreground objects.
+        Visualization of the warped frames and temporal predictors in BasketballDrive. The first row is input frames, with (a) (c) being the reference frames and (b) the target frame. The second row is results with OMRA, where (d) and (f) are temporally warped frames from (a) and (c), respectively. (e) is the temporal predictor. Likewise, the third row is the corresponding results without OMRA. $W(x_{t'},F_{t \to t'})$ denotes backward warping, where $x_{t'}$ is the reference frame to be warped and $F_{t \to t'}$ describes the backward flow from $x_t$ to $x_{t'}$.
       </p>
-      <!-- <div class="col-md-6 text-center">
-        <p style="text-align:center;">
-        <h3>Classification</h3>
-        </p>
-      </div>
-      <div class="col-md-6 text-center">
-        <p style="text-align:center;">
-        <h3></h3>
-        </p>
-      </div> -->
+          <p style="text-align:center;"><b>HoneyBee</b></p>
+            <p style="text-align:center;">
 
-      <div id="exp1">
-        <div class="col-md-6 vcenter">
-          <p style="text-align:center;">
-            <a href="assets/results/dog.png" data-lightbox="Exp1"><img
-              src="assets/results/dog.png" width="1080"></a>
-              <a href="assets/results/dog2.png" data-lightbox="Exp1"><img
-                src="assets/results/dog2.png" width="1080"></a>
-            <a href="assets/results/bird.png" data-lightbox="Exp1"><img
-                src="assets/results/bird.png" width="1080"></a>
-          </p>
-        </div>
-      </div>
-      <div class="col-md-12">
-        <hr>
-      </div>
-      <div id="exp2">
-        <div class="col-md-6 vcenter">
-          <p style="text-align:center;">
-            <a href="assets/results/ski.png" data-lightbox="Exp2"><img
-              src="assets/results/ski.png" width="1080"></a>
-            <a href="assets/results/kids.png" data-lightbox="Exp2"><img
-              src="assets/results/kids.png" width="1080"></a>
-            <a href="assets/results/baseball.png" data-lightbox="Exp2"><img
-                src="assets/results/baseball.png" width="1080"></a>
-          </p>
-        </div>
-      </div>
-      <div class="col-md-12">
-        <hr>
-      </div>
-      <div id="exp3">
-        <div class="col-md-6 vcenter">
-          <p style="text-align:center;">
-            <a href="assets/results/ski2.png" data-lightbox="Exp3"><img
-              src="assets/results/ski2.png" width="1080"></a>
-            <a href="assets/results/kids2.png" data-lightbox="Exp3"><img
-              src="assets/results/kids2.png" width="1080"></a>
-          </p>
-        </div>
-      </div>
+            <a href="assets/Visualization/HoneyBee.png" data-lightbox="HoneyBee"><img
+                src="assets/Visualization/HoneyBee.png" width="540"></a>
+            </p>
 
+          <br>
+
+          <p style="text-align:center;"><b>BasketballDrive</b></p>
+          <p style="text-align:center;">
+            <a href="assets/Visualization/BasketballDrive.png" data-lightbox="BasketballDrive"><img
+                src="assets/Visualization/BasketballDrive.png" width="540"></a>
+          </p>
     </div>
 
     <div id=footer><br></div>
